@@ -1,0 +1,204 @@
+---
+description: project plan and rules for ai file organizer
+globs: 
+alwaysApply: false
+---
+
+# AI File Organizer: Developer Implementation Guide
+
+This guide provides a high-level outline for implementing the AI File Organizer project, focusing on project structure, functionality, and development phases rather than complete code. We want to ensure the code is not overly complex and kept simple, but functional. 
+
+## Project Overview
+
+The AI File Organizer uses Claude 3.7 Sonnet to intelligently analyze and organize files based on their types, content, and relationships.
+
+### Key Capabilities
+- Directory content analysis
+- AI-powered organization suggestions
+- Automatic file categorization
+- Both CLI and GUI interfaces
+- Content-based file grouping
+
+## Project Structure
+
+```
+ai-file-organizer/
+├── .env                  # For API key
+├── README.md
+├── requirements.txt
+└── src/
+    ├── core/             # Core functionality
+    │   ├── claude_api.py # Claude API integration
+    │   ├── file_ops.py   # File operations
+    │   └── organizer.py  # Organization logic
+    ├── cli/              # Command-line interface
+    │   └── cli_app.py
+    ├── gui/              # Graphical interface
+    │   └── gui_app.py
+    └── main.py           # Entry point
+```
+
+## Phase 1: Core Functionality
+
+### Environment Setup
+```bash
+# Create virtual environment and install dependencies
+python -m venv venv
+pip install anthropic pysimplegui python-dotenv
+```
+
+### Claude API Integration
+Focus on creating a simple client to interact with Claude:
+
+```python
+# Example code snippet (claude_api.py)
+from anthropic import Anthropic
+
+class ClaudeClient:
+    def __init__(self, api_key):
+        self.client = Anthropic(api_key=api_key)
+    
+    def analyze_directory(self, files_info, query):
+        """Get Claude's analysis of directory contents"""
+        # Simple example of how to structure a Claude API call
+        response = self.client.messages.create(
+            model="claude-3-7-sonnet-20250219",
+            messages=[{"role": "user", "content": f"Files: {files_info}\nQuery: {query}"}],
+            # Additional parameters would go here
+        )
+        return response.content
+```
+
+### File Operations
+Core file utilities will handle:
+- Directory scanning
+- File metadata extraction
+- File moving/copying
+- Directory creation
+
+```python
+# Example code snippet (file_ops.py)
+def scan_directory(path):
+    """Scan directory and return file metadata"""
+    # This function would collect detailed file information
+    # like extensions, sizes, creation dates, etc.
+    pass
+
+def create_category_folders(base_dir, categories):
+    """Create folders for each category if they don't exist"""
+    pass
+    
+def move_file(source, destination):
+    """Move a file with error handling and logging"""
+    pass
+```
+
+### Basic Organization Logic
+Start with simple type-based organization:
+
+```python
+# Example code snippet (organizer.py)
+def organize_by_extension(directory):
+    """Group files by extension into standard folders"""
+    # Implementation would create folders like Documents, Images, etc.
+    # and move files based on their extensions
+    pass
+```
+
+## Phase 2: Command-Line Interface
+
+The CLI should provide a simple way to interact with the core functionality:
+
+```python
+# Example CLI usage
+# python main.py list --dir ~/Documents
+# python main.py suggest --dir ~/Downloads
+# python main.py organize --dir ~/Desktop --strategy type
+```
+
+Key CLI commands:
+- `list`: Display files in a directory
+- `suggest`: Get Claude's organization suggestions
+- `organize`: Apply organization strategy
+- `custom`: Run a custom query through Claude
+
+## Phase 3: Graphical User Interface
+
+Build a simple GUI using PySimpleGUI:
+
+```python
+# Example code snippet (gui_app.py)
+import PySimpleGUI as sg
+
+def create_main_window():
+    """Create the main application window"""
+    layout = [
+        [sg.Text("Directory:"), sg.Input(key="-DIR-"), sg.FolderBrowse()],
+        [sg.Button("Analyze"), sg.Button("Organize")],
+        [sg.Multiline(size=(70, 20), key="-OUTPUT-")]
+    ]
+    return sg.Window("AI File Organizer", layout)
+```
+
+GUI features:
+- Directory browser
+- File preview panel
+- Claude's suggestions display
+- Organization options
+- Thinking process visualization
+
+## Functionality Roadmap
+
+### Version 1.0: Basic Functionality
+- Type-based organization (documents, images, etc.)
+- Simple CLI interface
+- Basic Claude integration
+
+### Version 1.5: Enhanced Organization
+- Content-based grouping
+- Custom organization rules
+- More detailed file analysis
+
+### Version 2.0: Full GUI Application
+- Complete PySimpleGUI interface
+- Drag-and-drop functionality
+- Claude's thinking visualization
+- Organization previews
+
+### Future Enhancements
+- Custom organization profiles
+- Scheduled organization tasks
+- Content-based duplicate detection
+- Filename standardization
+- Tag-based organization system
+
+## Implementation Considerations
+
+### Claude Integration Best Practices
+- Provide meaningful context to Claude
+- Include relevant file metadata 
+- Use thinking mode for complex organization tasks
+- Create clear prompts that define organization goals
+
+### File Operations Safety
+- Always confirm before moving/deleting files
+- Implement undo functionality
+- Log all file operations
+- Handle permission errors gracefully
+
+### GUI Design Principles
+- Keep the interface simple and intuitive
+- Provide clear feedback for long-running operations
+- Include dark mode option (aligning with your preference)
+- Include progress indicators for file operations
+
+## Getting Started
+
+To begin development:
+
+1. Set up your Python environment and install dependencies
+2. Implement the core Claude client
+3. Create basic file operations utilities
+4. Build the CLI interface
+5. Test with simple organization tasks
+6. Progressively enhance with more advanced features
